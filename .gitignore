@@ -143,3 +143,8 @@ cython_debug/
 # PyCharm
 # For a more nuclear option, uncomment below
 #.idea/
+# Ignore everything in the .envs folder
+.envs/*
+
+# Except the .env.example file
+!.envs/.env.example
