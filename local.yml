@@ -26,7 +26,7 @@ services:
     volumes:
       - banker_local_db:/var/lib/postgresql/data
     env_file:
-      - ./.envs/.ent.local
+      - ./.envs/.env.local
     networks:
       - banker_local_nw
   
