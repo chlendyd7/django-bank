@@ -4,7 +4,12 @@ set -o errexit
 
 set -o pipefail
 
-set -i nounset
+set -o nounset
+
+if [ -z "${POSTGREST_DB:-}" ]; then
+  echo "Error: POSTGREST_DB is not set."
+  exit 1
+fi
 
 python manage.py migrate --no-input
 python manage.py collecstatic --no-input

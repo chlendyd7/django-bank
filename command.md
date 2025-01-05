@@ -6,3 +6,4 @@ echo. > .envs\.env.local
 echo. > .envs\.env.example
 docker network create banker_local_nw
 docker network ls
+docker compose -f local.yml config

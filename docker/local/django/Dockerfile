@@ -1,4 +1,4 @@
-FROM docker.io/python:3.12.2-slim-bookwrom AS python
+FROM docker.io/python:3.12.2-slim-bookworm AS python
 
 # Stage 1: Buiild our dependency wheels
 FROM python AS python-build-stage
@@ -53,7 +53,7 @@ COPY --chown=django:django ./docker/local/django/entrypoint.sh /entrypoint.sh
 COPY --chown=django:django ./docker/local/django/start.sh /start.sh
 
 # 사용자 권한으로 실행
-RUN sed - i 's\/r$//g' /entrypoint.sh /start.sh $$ \
+RUN sed -i 's/\r$//g' /entrypoint.sh /start.sh && \
     chmod +x /entrypoint.sh /start.sh
 
 COPY --chown=django:django . ${APP_HOME}
