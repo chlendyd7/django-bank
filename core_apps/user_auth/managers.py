@@ -19,3 +19,47 @@ def generate_username() -> str:
     )
     username = f'{prefix}-{random_chars}'
     return username
+
+def validate_email_address(email: str) -> None:
+    try:
+        validate_email(email)
+    except ValidationError:
+        raise ValidationError(_("Enter a valid email address."))
+
+class UserManager(DjangoUserManager):
+    def _create_user(self, email:str, password: str, **extra_fields: Any):
+        if not email:
+            raise ValueError(_("Users must have an email address."))
+        
+        if not password:
+            raise ValueError(_("A password must be provided."))
+        
+        username = generate_username()
+        email = self.normalize_email(email)
+        validate_email_address(email)
+        
+        user = self.model(
+            username=username,
+            email=email,
+            **extra_fields
+        )
+        user.password = make_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email: str, password: Optional[str]=None, **extra_fields: Any):
+        extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('is_staff', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, username: str, email: str, password: Optional[str]=None, **extra_fields: Any):
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
+
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        
+        return self.create_user(email, password, **extra_fields)
